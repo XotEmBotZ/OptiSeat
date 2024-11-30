@@ -1,6 +1,6 @@
 
-def createSchema()->None:
+def createSchema(conn)->None:
     ...
 
-def checkSchema()->None:
+def checkSchema(conn)->None:
     ...
