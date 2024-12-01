@@ -1,4 +1,5 @@
 import datetime
+
 import importlib.resources
 from utils.types import RoomType, studentType
 from utils.utils import cvtLstIntToSql
