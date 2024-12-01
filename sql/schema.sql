@@ -1,11 +1,11 @@
 -- Create the 'teachers' table
-CREATE TABLE teacher (
+CREATE TABLE IF NOT EXISTS teacher (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR NOT NULL
 );
 
 -- Create the 'rooms' table
-CREATE TABLE room (
+CREATE TABLE IF NOT EXISTS room (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name CHAR(3) NOT NULL,
     num_benches INTEGER NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE room (
 );
 
 -- Create the 'students' table
-CREATE TABLE student (
+CREATE TABLE IF NOT EXISTS student (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     std INTEGER NOT NULL,
     sec CHAR(1) NOT NULL,
@@ -21,11 +21,11 @@ CREATE TABLE student (
     is_seq BOOLEAN NOT NULL,
     roll_start INTEGER,
     roll_end INTEGER,
-    roll_arr INTEGER[]
+    roll_arr VARCHAR
 );
 
 -- Create the 'timetabl' table
-CREATE TABLE timetable (
+CREATE TABLE IF NOT EXISTS timetable (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE NOT NULL,
     std INTEGER NOT NULL,

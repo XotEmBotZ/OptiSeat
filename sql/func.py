@@ -2,17 +2,13 @@ import datetime
 from utils.types import RoomType, studentType
 from utils.utils import cvtLstIntToSql
 
-# Code below this line is for testing only
-import mysql.connector as mys
-
-conn = mys.connect(host="localhost", user="root", passwd="1234")
-# Code above this line for testing oply
-
 
 def createSchema(conn) -> None:
     cursor = conn.cursor()
-    query = open("schema.sql").read()
-    cursor.execute(query)
+    query = open(r"sql\schema.sql").read()
+    query = query.split(';')
+    for q in query:
+        cursor.execute(q)
     conn.commit()
 
 
@@ -50,12 +46,12 @@ def insertStudents(conn, std: int, sec: str, sub: str, isSeq: bool, rollStart: i
     assert len(sub) == 3, 'Length of sub is not 3'
     if isSeq == True:
         query = f"INSERT INTO student (std,sec,sub,is_seq,roll_start,roll_end) values ({
-            std},{sec},{sub},{isSeq},{rollStart},{rollEnd}) returning id;"
+            std},'{sec}','{sub}',{isSeq},{rollStart},{rollEnd}) returning id;"
     else:
         assert rollArr is not None, 'Roll array is None'
         assert not len(rollArr) == 0, 'Length of roll array is 0'
-        query = f"INSERT INTO student (std,sec,sub,is_seq,roll_arr) values ({std},{sec},{
-            sub},{isSeq},{cvtLstIntToSql(rollArr)}) returning id;"
+        query = f"INSERT INTO student (std,sec,sub,is_seq,roll_arr) values ({std},'{
+            sec}','{sub}',{isSeq},'{cvtLstIntToSql(rollArr)}') returning id;"
     cursor.execute(query)
     id = cursor.fetchone()[0]
     conn.commit()
@@ -64,28 +60,27 @@ def insertStudents(conn, std: int, sec: str, sub: str, isSeq: bool, rollStart: i
 
 def insertTimetable(conn, date: datetime.date, std: int, sub: str) -> int:
     cursor = conn.cursor()
-    cursor.execute()
+    assert len(sub) == 3, 'Length of sub is not 3'
+    query = f'''INSERT INTO timetable (date,std,sub) VALUES ('{
+        date.strftime("%Y-%m-%d")}',{std},'{sub}') returning id;'''
+    cursor.execute(query)
+    id = cursor.fetchone()[0]
     conn.commit()
-    # returns the generated ID
-    return 0
+    return id
 
 
 def fetchRooms(conn) -> list[RoomType]:
     cursor = conn.cursor()
     cursor.execute()
     conn.commit()
-    # roomDict={name,no_bench,bench_std}
     return []
-    ...
 
 
 def fetchStud(conn, std: int, sub: str) -> list[studentType]:
+    # [{std:23,sub:"eng",roll:1},{std:23,sub:"eng",roll:2},{std:23,sub:"eng",roll:3},{std:23,sub:"eng",roll:4}]
     cursor = conn.cursor()
     cursor.execute()
     conn.commit()
-    # fetch students with given std and str
-    # order by std,sub
-    # return tuple as ([std,sub,rollNo],[std,sub,rollNo],[std,sub,rollNo])
     return []
 
 
@@ -106,3 +101,12 @@ def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
     sub = "eng"
     ...
     return std, sub
+
+
+if __name__ == "__main__":
+    import mysql.connector as mys
+    import sqlite3
+
+    conn = sqlite3.connect(".test.db")
+
+    createSchema(conn)
