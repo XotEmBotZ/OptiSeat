@@ -19,9 +19,9 @@ CREATE TABLE students (
     sec CHAR(1) NOT NULL,
     sub CHAR(3) NOT NULL,
     is_seq BOOLEAN NOT NULL,
-    roll_start INT NOT NULL,
-    roll_end INT NOT NULL,
-    roll_arr INT[] NOT NULL
+    roll_start INT,
+    roll_end INT,
+    roll_arr INT[]
 );
 
 -- Create the 'timetable' table
