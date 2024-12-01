@@ -1,7 +1,9 @@
 import datetime
+
 from sql import func as sql_func
 from utils.types import RoomExtendedType, RoomType, studentType
 from utils.utils import checkStdSubExceedsNumBench
+
 
 def allocateSeat(conn)->dict[str,dict[str,RoomExtendedType]]:
     rooms: list[RoomType]=sql_func.fetchRooms(conn)
