@@ -27,7 +27,7 @@ def insertTimetable(conn,date:datetime.date,std:int,sub:str)->int:
     return 0
 
 def fetchRooms(conn)->dict[str,str|int|list|dict]:
-    #roomDict={name,no_bench,bench_std,stdRaw:[],finalOpt:{}}
+    #roomDict={name,no_bench,bench_std}
     ...
 
 def fetchStd(conn)->list[tuple[str|int]]:
