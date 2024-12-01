@@ -25,3 +25,11 @@ def insertStudents(conn,std:int,sec:str,sub:str,isSeq:bool,rollStart:int=0,rollE
 def insertTimetable(conn,date:datetime.date,std:int,sub:str)->int:
     #returns the generated ID
     return 0
+
+def fetchRooms(conn)->dict[str,str|int|list|dict]:
+    #roomDict={name,no_bench,bench_std,stdRaw:[],finalOpt:{}}
+    ...
+
+def fetchStd(conn)->list[tuple[str|int]]:
+    #return tuple as ([std,sub,rollNo],[std,sub,rollNo],[std,sub,rollNo])
+    ...
