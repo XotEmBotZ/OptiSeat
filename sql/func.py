@@ -33,3 +33,11 @@ def fetchRooms(conn)->dict[str,str|int|list|dict]:
 def fetchStd(conn)->list[tuple[str|int]]:
     #return tuple as ([std,sub,rollNo],[std,sub,rollNo],[std,sub,rollNo])
     ...
+
+def fetchDistinctDate(conn)->list[datetime.date]:
+    #fetch distinct date from timetable
+    ...
+
+def fetchStdSub(conn,date:datetime.date)->list[list[str|int]]:
+    #returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
+    ...
