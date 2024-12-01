@@ -58,31 +58,17 @@ def insertStudents(conn, std: int, sec: str, sub: str, isSeq: bool, rollStart: i
     return id
 
 
-def insertTimetable(conn, date: datetime.date, std: int, sub: str) -> int:
-    cursor = conn.cursor()
-    assert len(sub) == 3, 'Length of sub is not 3'
-    query = f'''INSERT INTO timetable (date,std,sub) VALUES ('{
-        date.strftime("%Y-%m-%d")}',{std},'{sub}') returning id;'''
-    cursor.execute(query)
-    id = cursor.fetchone()[0]
-    conn.commit()
-    return id
+def insertTimetable(conn,date:datetime.date,std:int,sub:str)->int:
+    #returns the generated ID
+    return 0
 
+def fetchRooms(conn)->dict[str,str|int|list|dict]:
+    #roomDict={name,no_bench,bench_std,stdRaw:[],finalOpt:{}}
+    ...
 
-def fetchRooms(conn) -> list[RoomType]:
-    cursor = conn.cursor()
-    cursor.execute()
-    conn.commit()
-    return []
-
-
-def fetchStud(conn, std: int, sub: str) -> list[studentType]:
-    # [{std:23,sub:"eng",roll:1},{std:23,sub:"eng",roll:2},{std:23,sub:"eng",roll:3},{std:23,sub:"eng",roll:4}]
-    cursor = conn.cursor()
-    cursor.execute()
-    conn.commit()
-    return []
-
+def fetchStd(conn)->list[tuple[str|int]]:
+    #return tuple as ([std,sub,rollNo],[std,sub,rollNo],[std,sub,rollNo])
+    ...
 
 def fetchDistinctDate(conn) -> list[datetime.date]:
     cursor = conn.cursor()
@@ -92,21 +78,6 @@ def fetchDistinctDate(conn) -> list[datetime.date]:
     return []
 
 
-def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
-    cursor = conn.cursor()
-    cursor.execute()
-    conn.commit()
-    # returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
-    std = 1
-    sub = "eng"
+def fetchStdSub(conn,date:datetime.date)->list[list[str|int]]:
+    #returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
     ...
-    return std, sub
-
-
-if __name__ == "__main__":
-    import mysql.connector as mys
-    import sqlite3
-
-    conn = sqlite3.connect(".test.db")
-
-    createSchema(conn)
