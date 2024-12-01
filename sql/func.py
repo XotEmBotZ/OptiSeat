@@ -27,7 +27,7 @@ def insertTimetable(conn,date:datetime.date,std:int,sub:str)->int:
     #returns the generated ID
     return 0
 
-def fetchRooms(conn)->dict[str,str|int|list|dict]:
+def fetchRooms(conn)->list[RoomType]:
     #roomDict={name,no_bench,bench_std}
     ...
 
