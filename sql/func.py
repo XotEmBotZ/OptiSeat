@@ -23,7 +23,7 @@ def checkSchema(conn) -> None:
 
 def insertRooms(conn, name: str, noBench: int, benchStd: int = 2) -> int:
     cursor = conn.cursor()
-    assert len(name) <= 3, "Length of sec name is more than 3"
+    assert len(name) <= 5, "Length of sec name is more than 5"
     query = f"INSERT INTO room (name,num_benches,bench_stud) VALUES ('{
         name}',{noBench},{benchStd}) returning id;"
     cursor.execute(query)

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS teacher (
 -- Create the 'rooms' table
 CREATE TABLE IF NOT EXISTS room (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name CHAR(3) NOT NULL,
+    name CHAR(5) NOT NULL,
     num_benches INTEGER NOT NULL,
     bench_stud INTEGER DEFAULT 2 NOT NULL
 );
