@@ -1,11 +1,11 @@
 import datetime
+import importlib.resources
 from utils.types import RoomType, studentType
 from utils.utils import cvtLstIntToSql
 
-
 def createSchema(conn) -> None:
     cursor = conn.cursor()
-    query = open(r"sql\schema.sql").read()
+    query = open(str(importlib.resources.files("sql") / "schema.sql")).read()
     query = query.split(';')
     for q in query:
         cursor.execute(q)
@@ -106,7 +106,6 @@ def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
 if __name__ == "__main__":
     import mysql.connector as mys
     import sqlite3
-
     conn = sqlite3.connect(".test.db")
 
     createSchema(conn)
