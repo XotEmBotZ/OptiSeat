@@ -1,12 +1,11 @@
 import datetime
-
+import importlib.resources
 from utils.types import RoomType, studentType
 from utils.utils import cvtLstIntToSql
 
-
 def createSchema(conn) -> None:
     cursor = conn.cursor()
-    query = open(r"sql\schema.sql").read()
+    query = open(str(importlib.resources.files("sql") / "schema.sql")).read()
     query = query.split(';')
     for q in query:
         cursor.execute(q)
@@ -79,6 +78,20 @@ def fetchDistinctDate(conn) -> list[datetime.date]:
     return []
 
 
-def fetchStdSub(conn,date:datetime.date)->list[list[str|int]]:
-    #returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
+def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
+    cursor = conn.cursor()
+    cursor.execute()
+    conn.commit()
+    # returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
+    std = 1
+    sub = "eng"
     ...
+    return std, sub
+
+
+if __name__ == "__main__":
+    import mysql.connector as mys
+    import sqlite3
+    conn = sqlite3.connect(".test.db")
+
+    createSchema(conn)
