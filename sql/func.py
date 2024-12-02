@@ -1,7 +1,7 @@
 import datetime
 
 import importlib.resources
-from utils.types import RawStudentType, RoomType, Timetable, studentType
+from utils.types import RawStudentType, RoomType, StudentType, Timetable
 from utils import utils
 
 def createSchema(conn) -> None:
@@ -75,9 +75,28 @@ def fetchRooms(conn)->list[RoomType]:
     res:list[RoomType]=[{"name":row[0],"numBench":row[1],"benchStud":row[2]} for row in opt]
     return res
 
-def fetchStud(conn)->list[studentType]:
-    #return tuple as ([std,sub,rollNo],[std,sub,rollNo],[std,sub,rollNo])
-    ...
+def fetchStud(conn,std:int,sub:str)->list[StudentType]:
+    cur=conn.cursor()
+    query=f"SELECT std,sub,sec,is_seq,roll_start,roll_end,roll_arr FROM student WHERE std={std} AND sub= '{sub}' ORDER BY sec"
+    cur.execute(query)
+    opt=cur.fetchall()
+    res=[]
+    for studRow in opt:
+        studDict={
+            "std":studRow[0],
+            "sub":studRow[1],
+            "sec":studRow[2],
+        }
+        # "isSeq":studRow[3],
+        # "rollStart":studRow[4],
+        # "rollEnd":studRow[5],
+        # "rollArr":studRow[6],
+        if studRow[3]:
+            res.extend([{**studDict,"rollNo":roll} for roll in range(studRow[4],studRow[5]+1)])
+        else:
+            rollArr=eval(studRow[6])
+            res.extend([{**studDict,"rollNo":roll} for roll in rollArr])
+    return res
 
 def fetchStudRaw(conn)->list[RawStudentType]:
     cur=conn.cursor()
@@ -100,21 +119,18 @@ def fetchTimetable(conn)->list[Timetable]:
 
 def fetchDistinctDate(conn) -> list[datetime.date]:
     cursor = conn.cursor()
-    cursor.execute()
-    conn.commit()
-    # fetch distinct date from timetable
-    return []
+    query="SELECT DISTINCT(date) FROM timetable;"
+    cursor.execute(query)
+    res=cursor.fetchall()
+    return [datetime.datetime.strptime(date[0],"%Y-%m-%d").date() for date in res]
 
 
-def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
+def fetchStdSub(conn, date: datetime.date) -> list[tuple[int, str]]:
     cursor = conn.cursor()
-    cursor.execute()
-    conn.commit()
-    # returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
-    std = 1
-    sub = "eng"
-    ...
-    return std, sub
+    query=f"SELECT std,sub FROM timetable WHERE date='{date.strftime("%Y-%m-%d")}' ORDER BY std,sub ASC"
+    cursor.execute(query)
+    res:list[tuple[int,str]]=cursor.fetchall()
+    return res
 
 def deleteAllRooms(conn) -> None:
     cur=conn.cursor()
