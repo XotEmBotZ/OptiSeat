@@ -1,4 +1,5 @@
 import datetime
+import pickle
 from pprint import pprint
 import sqlite3
 
@@ -80,5 +81,5 @@ def postProcessRes(res:dict[str,dict[str,RoomExtendedType]]):
 
 if __name__=="__main__":
     conn=sqlite3.connect("test.sqlite3")
-    pprint(postProcessRes(allocateSeat(conn)))
+    pickle.dump(postProcessRes(allocateSeat(conn)),open("data.bin","wb"))
     

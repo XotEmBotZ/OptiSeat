@@ -1,5 +1,7 @@
 from utils.types import RawStudentType, RoomExtendedType, RoomType, Timetable
 from sql import func
+import xlsxwriter
+import io
 
 def numStdSubStud(room:RoomExtendedType,std:int,sub:str)->int:
     count = 0
@@ -49,3 +51,38 @@ def insertManyStuds(conn,studLst:list[RawStudentType])->None:
 def insertManyTimetable(conn,ttList:list[Timetable])->None:
     for tt in ttList:
         func.insertTimetable(conn,tt["date"],tt["std"],tt["sub"])
+
+def getXlsxFile(data,filename):
+    def writeClass(room,worksheet,row,border):
+        worksheet.merge_range(row,0,row+1+len(room["stud"]),0,room["name"],border)
+        worksheet.write(row,1,"No. Bench:",border)
+        worksheet.write(row,2,room["numBench"],border)
+        worksheet.write(row,3,"Student/Bench:",border)
+        worksheet.write(row,4,room["benchStud"],border)
+        row+=1
+        worksheet.write(row,1,"Class-Sec",border)
+        worksheet.write(row,2,"Subject",border)
+        worksheet.merge_range(row,3,row,4,"Roll",border)
+        row+=1
+        for stdSec in room["stud"]:
+            worksheet.write(row,1,str(stdSec["std"])+"-"+stdSec["sec"],border)
+            worksheet.write(row,2,stdSec["sub"],border)
+            if stdSec["isSeq"]:
+                worksheet.write(row,3,stdSec["rollStart"],border)
+                worksheet.write(row,4,stdSec["rollEnd"],border)
+            else:
+                worksheet.merge_range(row,3,row,4,str(stdSec["rollArr"]).replace("[","").replace("]",""))
+            row+=1
+        return row
+    opt=io.BytesIO()
+    workbook=xlsxwriter.Workbook(opt,{"in_memory":True})
+    border=workbook.add_format({'border':1, 'border_color':'black'})
+    for date,roomLst in data.items():
+        worksheet=workbook.add_worksheet(date)
+        row=0
+        for room in roomLst:
+            row=writeClass(room,worksheet,row,border)
+            row+=1
+        worksheet.autofit()
+    workbook.close()
+    return opt.getvalue()

@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
-mysql.connector
-=======
 mysql.connector
 streamlit
 pandas
->>>>>>> Stashed changes
+XlsxWriter
