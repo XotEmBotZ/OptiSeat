@@ -1,5 +1,5 @@
-from utils.types import RoomExtendedType
-
+from utils.types import RawStudentType, RoomExtendedType, RoomType, Timetable
+from sql import func
 
 def numStdSubStud(room:RoomExtendedType,std:int,sub:str)->int:
     count = 0
@@ -25,3 +25,19 @@ def checkStdSubExceedsNumBench(roomList:list[RoomExtendedType]):
 def cvtLstIntToSql(integer_list):
     formatted_string = ', '.join(str(num) for num in integer_list)
     return f"({formatted_string})"
+
+
+def insertManyRooms(conn,rooms:list[RoomType])->None:
+    for room in rooms:
+        func.insertRoom(conn,room["name"],room["numBench"],room["benchStud"])
+
+def insertManyStuds(conn,studLst:list[RawStudentType])->None:
+    for stud in studLst:
+        if stud["isSeq"]:
+            func.insertStudent(conn,stud["std"],stud["sec"],stud["sub"],stud["isSeq"],stud["rollStart"],stud["rollEnd"])
+        else:
+            func.insertStudent(conn,stud["std"],stud["sec"],stud["sub"],stud["isSeq"],rollArr=stud["rollArr"])
+
+def insertManyTimetable(conn,ttList:list[Timetable])->None:
+    for tt in ttList:
+        func.insertTimetable(conn,tt["date"],tt["std"],tt["sub"])
