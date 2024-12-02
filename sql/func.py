@@ -45,8 +45,8 @@ def insertStudents(conn, std: int, sec: str, sub: str, isSeq: bool, rollStart: i
     assert len(sec) == 1, 'Length of sec is not 1'
     assert len(sub) == 3, 'Length of sub is not 3'
     if isSeq == True:
-        query = f"INSERT INTO student (std,sec,sub,is_seq,roll_start,roll_end) values ({
-            std},'{sec}','{sub}',{isSeq},{rollStart},{rollEnd}) returning id;"
+        query = f'''INSERT INTO student (std,sec,sub,is_seq,roll_start,roll_end) values ({
+            std},'{sec}','{sub}',{isSeq},{rollStart},{rollEnd}) returning id;'''
     else:
         assert rollArr is not None, 'Roll array is None'
         assert not len(rollArr) == 0, 'Length of roll array is 0'
@@ -71,15 +71,29 @@ def insertTimetable(conn, date: datetime.date, std: int, sub: str) -> int:
 
 def fetchRooms(conn) -> list[RoomType]:
     cursor = conn.cursor()
-    cursor.execute()
+    query = "SELECT * FROM room;"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    roomType = []
+    for row in rows:
+        data = row
+        D = {'name':row[1],'numBench':row[2],'benchStud':row[3]}
+        roomType.append(D)
     conn.commit()
-    return []
+    return roomType
 
 
 def fetchStud(conn, std: int, sub: str) -> list[studentType]:
     # [{std:23,sub:"eng",roll:1},{std:23,sub:"eng",roll:2},{std:23,sub:"eng",roll:3},{std:23,sub:"eng",roll:4}]
     cursor = conn.cursor()
-    cursor.execute()
+    query = f"SELECT * FROM student;"
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    rowCount = len(rows)
+    studentType = []
+    for i in range(rowCount):
+        data = rows[i]
+        #D = {'std':data[1],'sub':data[3],'roll':data[]}
     conn.commit()
     return []
 
@@ -94,13 +108,16 @@ def fetchDistinctDate(conn) -> list[datetime.date]:
 
 def fetchStdSub(conn, date: datetime.date) -> tuple[int, str]:
     cursor = conn.cursor()
-    cursor.execute()
+    query = f'''SELECT std,sub FROM timetable WHERE date='{date.strftime('%Y-%m-%d')}'''
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    fetchedStdSub = []
+    for row in rows:
+        data = row
+        fetchedStdSub.append((data[2], data[3]))
     conn.commit()
     # returns the list of (std,sub) for a given date RETURN IN THIS ORDER ONLY
-    std = 1
-    sub = "eng"
-    ...
-    return std, sub
+    return tuple(fetchedStdSub)
 
 
 if __name__ == "__main__":
@@ -109,3 +126,4 @@ if __name__ == "__main__":
     conn = sqlite3.connect(".test.db")
 
     createSchema(conn)
+    
