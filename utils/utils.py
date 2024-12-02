@@ -16,11 +16,19 @@ def getDistinctStdSub(room:RoomExtendedType) -> list[tuple[int, str]]:
             stdSubLst.append(stdSub)
     return stdSubLst
 
+def getDistinctStdSubSec(room:RoomExtendedType) -> list[tuple[int, str,str]]:
+    stdSubSecLst:list[tuple[int,str,str]]=[]
+    for stud in room["studRaw"]:
+        stdSubSec=(stud['std'],stud['sub'],stud["sec"])
+        if  stdSubSec not in stdSubSecLst:
+            stdSubSecLst.append(stdSubSec)
+    return stdSubSecLst
+
 def checkStdSubExceedsNumBench(roomList:list[RoomExtendedType]):
     for room in roomList:
         distinctStdSub: list[tuple[int, str]]= getDistinctStdSub(room)
         for stdSub in distinctStdSub:
-            assert numStdSubStud(room,*stdSub) > room['numBench'], "Number of students having same standard and subject is more than number of benches (insufficient rooms)"
+            assert not numStdSubStud(room,*stdSub) > room['numBench'], "Number of students having same standard and subject is more than number of benches (insufficient rooms)"
             
 def cvtLstIntToSql(integer_list):
     formatted_string = ', '.join(str(num) for num in integer_list)
