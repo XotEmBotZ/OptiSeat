@@ -1,0 +1,4 @@
+mysql.connector
+streamlit
+pandas
+XlsxWriter
