@@ -86,3 +86,11 @@ def getXlsxFile(data,filename):
         worksheet.autofit()
     workbook.close()
     return opt.getvalue()
+
+def mysqlConnectionStringToDict(connStr:str)->dict:
+    components=connStr.split(" ")
+    connConfig={}
+    for component in components:
+        key,value=component.split("=")
+        connConfig[key]=value
+    return connConfig

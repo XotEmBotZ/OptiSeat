@@ -1,13 +1,23 @@
 import pandas as pd
 import streamlit as st
-from connections import sqlite3Connector
+from connections import sqlite3Connector,mySqlConnector
 from sql import func
 from utils import utils
 from utils.types import RawStudentType
 import datetime
 
+if "db" not in st.session_state:
+    st.session_state["db"]="Sqlite3"
+if "dbConnStr" not in st.session_state:
+    st.session_state["dbConnStr"]="./db.sqlite3"
+
 try:
     conn=sqlite3Connector(connection_name="sqlite3",database="./test.sqlite3")
+    if st.session_state["db"]=="Sqlite3":
+        conn=sqlite3Connector(connection_name="sqlite3",database=st.session_state["dbConnStr"])
+    elif st.session_state["db"]=="MySql":
+        config=utils.mysqlConnectionStringToDict(st.session_state["dbConnStr"])
+        conn=mySqlConnector(connection_name="mysql",**config)
 
     st.header("Modify the data")
     st.caption("Use the Demo Entries to get the datatype and fill similarly")
